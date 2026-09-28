@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import {notFound} from 'next/navigation'
 import {client} from '@/sanity/client'
+import {CellarSections} from '@/components/inventory-page'
 import {BEAN_BY_SLUG_QUERY, type BeanDetail} from '@/sanity/queries'
 
 const STORAGE_LABELS: Record<string, string> = {
@@ -120,6 +121,17 @@ export default async function BeanPage({params}: PageProps<'/beans/[slug]'>) {
           <Info label="Storage">{STORAGE_LABELS[bean.storage] ?? bean.storage}</Info>
         )}
         {bean.weightGrams != null && <Info label="Weight">{bean.weightGrams}g</Info>}
+      </section>
+
+      <section className="mt-10">
+        <h2 className="text-xl font-semibold">Cellar</h2>
+        {(bean.cellar ?? []).length === 0 ? (
+          <p className="mt-2 text-sm text-zinc-500">Nothing stored for this bean yet.</p>
+        ) : (
+          <div className="mt-6">
+            <CellarSections items={bean.cellar} showBean={false} showEmpty={false} nested />
+          </div>
+        )}
       </section>
 
       {bean.notes && (

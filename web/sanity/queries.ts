@@ -71,6 +71,7 @@ export type BeanDetail = {
   } | null
   recipes: Recipe[]
   shots: Shot[]
+  cellar: CellarEntry[]
 }
 
 export const BEANS_QUERY = defineQuery(`
@@ -116,10 +117,58 @@ export const BEAN_BY_SLUG_QUERY = defineQuery(`
     "shots": *[_type == "shot" && bean._ref == ^._id] | order(pulledAt desc){
       _id, title, pulledAt, profile, doseGrams, yieldGrams,
       extractionTimeSeconds, peakPressureBar, peakFlowMlPerSec, rating, notes
+    },
+    "cellar": *[_type == "cellar" && bean._ref == ^._id] | order(cellarNumber asc, roastDate desc){
+      _id,
+      weightGrams,
+      roastDate,
+      storageType,
+      storage,
+      cellarNumber
     }
   }
 `)
 
 export const BEAN_SLUGS_QUERY = defineQuery(`
   *[_type == "bean" && defined(slug.current)][].slug.current
+`)
+
+export type CellarEntry = {
+  _id: string
+  weightGrams: number | null
+  roastDate: string | null
+  storageType: string | null
+  storage: string | null
+  cellarNumber: number | null
+}
+
+export type CellarItem = CellarEntry & {
+  beanName: string | null
+  beanSlug: string | null
+  roasterName: string | null
+  imageUrl: string | null
+  tastingNotes: string[] | null
+  process: string | null
+}
+
+export const CELLAR_ITEMS_QUERY = defineQuery(`
+  *[
+    _type == "cellar"
+    && ($storageType == "" || storageType == $storageType)
+    && ($storage == "" || storage == $storage)
+  ]
+  | order(cellarNumber asc, roastDate desc) {
+    _id,
+    weightGrams,
+    roastDate,
+    storageType,
+    storage,
+    cellarNumber,
+    "beanName": bean->name,
+    "beanSlug": bean->slug.current,
+    "roasterName": bean->roaster->name,
+    "imageUrl": bean->imageUrl,
+    "tastingNotes": bean->tastingNotes,
+    "process": bean->process
+  }
 `)

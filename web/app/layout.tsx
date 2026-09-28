@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import {Geist, Geist_Mono} from 'next/font/google'
 import Link from 'next/link'
+import {Nav} from '@/components/nav'
 import './globals.css'
 
 const geistSans = Geist({
@@ -30,11 +31,7 @@ export default function RootLayout({children}: LayoutProps<'/'>) {
             <Link href="/" className="font-semibold tracking-tight">
               ☕ Coffee Library
             </Link>
-            <nav className="text-sm text-zinc-600 dark:text-zinc-400">
-              <Link href="/" className="hover:text-zinc-900 dark:hover:text-zinc-100">
-                Beans
-              </Link>
-            </nav>
+            <Nav />
           </div>
         </header>
         <main className="flex-1">{children}</main>
