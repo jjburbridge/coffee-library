@@ -85,7 +85,7 @@ export const BEANS_QUERY = defineQuery(`
     storage,
     process,
     tastingNotes,
-    imageUrl,
+    "imageUrl": coalesce(image.asset->url + "?w=800&auto=format", imageUrl),
     "roasterName": roaster->name,
     "origin": origin.country
   }
@@ -105,7 +105,7 @@ export const BEAN_BY_SLUG_QUERY = defineQuery(`
     variety,
     tastingNotes,
     notes,
-    imageUrl,
+    "imageUrl": coalesce(image.asset->url + "?w=800&auto=format", imageUrl),
     origin,
     roaster->{
       _id, name, "slug": slug.current, location, website
@@ -167,7 +167,7 @@ export const CELLAR_ITEMS_QUERY = defineQuery(`
     "beanName": bean->name,
     "beanSlug": bean->slug.current,
     "roasterName": bean->roaster->name,
-    "imageUrl": bean->imageUrl,
+    "imageUrl": coalesce(bean->image.asset->url + "?w=800&auto=format", bean->imageUrl),
     "tastingNotes": bean->tastingNotes,
     "process": bean->process
   }

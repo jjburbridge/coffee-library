@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import {client} from '@/sanity/client'
-import {CELLAR_ITEMS_QUERY, type CellarEntry, type CellarItem} from '@/sanity/queries'
+import type {CellarEntry, CellarItem} from '@/sanity/queries'
 
 const STORAGE_LABELS: Record<string, string> = {
   wall: 'Wall',
@@ -44,6 +43,7 @@ function ItemList({
         const roasterName = 'roasterName' in item ? item.roasterName : null
         const tastingNotes = 'tastingNotes' in item ? item.tastingNotes : null
         const process = 'process' in item ? item.process : null
+        const imageUrl = 'imageUrl' in item ? item.imageUrl : null
         const beanHref = showBean && beanSlug ? `/beans/${beanSlug}` : null
         return (
           <li
@@ -51,6 +51,14 @@ function ItemList({
             className="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-4 sm:p-5"
           >
             <div className="flex gap-4">
+              {imageUrl && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={imageUrl}
+                  alt={beanName ?? ''}
+                  className="h-16 w-16 shrink-0 rounded object-cover"
+                />
+              )}
               {item.cellarNumber != null && (
                 <div className="shrink-0 w-12 text-center">
                   <p className="text-xs uppercase tracking-wide text-zinc-500">Tube</p>
@@ -166,48 +174,6 @@ export function CellarSections({
           <ItemList items={section.items} showBean={showBean} showType={false} />
         </section>
       ))}
-    </div>
-  )
-}
-
-export async function InventoryPage({
-  title,
-  description,
-  empty,
-  storage = '',
-  storageType = '',
-  grouped = false,
-}: {
-  title: string
-  description: string
-  empty: string
-  storage?: string
-  storageType?: string
-  grouped?: boolean
-}) {
-  const items = await client.fetch<CellarItem[]>(CELLAR_ITEMS_QUERY, {storage, storageType})
-  const grams = totalGrams(items)
-
-  return (
-    <div className="max-w-5xl mx-auto px-6 py-10">
-      <div className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-        <p className="mt-1 text-zinc-600 dark:text-zinc-400">
-          {items.length === 0
-            ? description
-            : `${items.length} item${items.length === 1 ? '' : 's'} · ${grams}g`}
-        </p>
-      </div>
-
-      {items.length === 0 ? (
-        <div className="rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700 p-8 text-center">
-          <p className="text-zinc-600 dark:text-zinc-400">{empty}</p>
-        </div>
-      ) : grouped ? (
-        <CellarSections items={items} />
-      ) : (
-        <ItemList items={items} showBean showType />
-      )}
     </div>
   )
 }

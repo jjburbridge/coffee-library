@@ -6,8 +6,6 @@ import {usePathname} from 'next/navigation'
 const LINKS = [
   {href: '/', label: 'Beans', match: (path: string) => path === '/' || path.startsWith('/beans')},
   {href: '/cellar', label: 'Cellar', match: (path: string) => path.startsWith('/cellar')},
-  {href: '/wall', label: 'Wall', match: (path: string) => path.startsWith('/wall')},
-  {href: '/freezer', label: 'Freezer', match: (path: string) => path.startsWith('/freezer')},
 ]
 
 export function Nav() {
