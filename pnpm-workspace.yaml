@@ -1,0 +1,6 @@
+packages:
+  - web
+  - sanity
+
+onlyBuiltDependencies:
+  - unrs-resolver

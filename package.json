@@ -1,0 +1,12 @@
+{
+  "name": "coffee-library",
+  "private": true,
+  "packageManager": "pnpm@10.22.0",
+  "scripts": {
+    "dev": "pnpm run --parallel --filter web --filter sanity-studio dev",
+    "dev:web": "pnpm --filter web dev",
+    "dev:studio": "pnpm --filter sanity-studio dev",
+    "build": "pnpm --filter web build && pnpm --filter sanity-studio build",
+    "lint": "pnpm --filter web lint"
+  }
+}
